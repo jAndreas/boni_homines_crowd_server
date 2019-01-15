@@ -6,7 +6,7 @@ const	nodemailer	= require( 'nodemailer' ),
 
 const	{ extend, log }	= require( './toolkit.js' );
 
-const	senderAddress	= 'andreas@example.de';
+const	senderAddress	= 'andreas@bonihomines.de';
 
 let MailService = target => class extends target {
 	constructor( input = { } ) {
@@ -51,7 +51,7 @@ let MailService = target => class extends target {
 	async sendMail({ toList, subject = '', text = '', html = '' }) {
 		toList = Array.isArray( toList ) ? toList : [ toList ];
 
-		if( this.this.DEVMODE ) {
+		if( this.DEVMODE ) {
 			//return 'this.DEVMODE';
 		}
 

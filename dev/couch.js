@@ -35,7 +35,7 @@ let CouchConnection = target => class extends target {
 
 		extend( this ).with({
 			couchUser:		'dvgadminLocal',
-			databases:		[ 'example1', 'example2' ]
+			databases:		[ 'bhcrowdusers' ]
 		}).and( input );
 	}
 
@@ -144,28 +144,45 @@ let CouchConnection = target => class extends target {
 		}
 	}
 
-	/*async newPendingSubscriber( data = { } ) {
-		let uuid		= await this.getId( 2 ),
-			storageObj	= Object.assign({
-				_id:			uuid[ 0 ]
-			}, exampleTemplate, {
-				email:			data.emailAddress,
-				origin:			data.origin,
-				secret:			uuid[ 1 ],
-				creationDate:	Date.now(),
-				updateDate:		Date.now()
-			});
-
+	async newPayer( data = { } ) {
 		try {
-			let couchData = await this.dvgusers.insert( storageObj );
-			console.log( 'New pending subscriber stored, ok: ', couchData.ok );
+			let couchData = await this.bhcrowdusers.insert( data );
 
-			return uuid[ 1 ];
+			return couchData.ok;
 		} catch( ex ) {
-			console.error( 'newPendingSubscriber: ', ex );
+			console.error( 'newPayer: ', ex );
 			throw ex;
 		}
-	}*/
+	}
+
+	async newDebugPayer( data = { } ) {
+		try {
+			data._id = await this.getId();
+			let couchData = await this.bhcrowdusers.insert( data );
+
+			return couchData.ok;
+		} catch( ex ) {
+			console.error( 'newPayer: ', ex );
+			throw ex;
+		}
+	}
+
+	async getFundingStatus() {
+		try {
+			let data = await this.bhcrowdusers.find({
+				selector:	{
+					state:	{ '$eq': 'approved' }
+				},
+				fields:		[ 'payerFirstName', 'payerLastName', 'amount', 'message', 'time' ],
+				limit:		100
+			});
+
+			return data;
+		} catch( ex ) {
+			console.error( 'getFundingStatus: ', ex );
+			throw ex;
+		}
+	}
 
 	async getId( max = 1 ) {
 		let couchData = await this.couch.uuids( max );

@@ -1,9 +1,10 @@
 'use strict';
 
 const	PuppeTeer	= require( 'puppeteer' ),
-		fs			= require( 'fs' );
+		fs			= require( 'fs' ),
+		path		= require( 'path' );
 
-const	{ extend, log }		= require( './toolkit.js' );
+const	{ extend, log, readFile, writeFile }		= require( './toolkit.js' );
 
 let Static = target => class extends target {
 	constructor( input = { } ) {
@@ -16,8 +17,8 @@ let Static = target => class extends target {
 	async init() {
 		super.init && await super.init( ...arguments );
 
-		/*console.log( `Generating landing pages and other pre-rendered static data...\n-----\n` );
 		await this.createIndexPage();
+		/*console.log( `Generating landing pages and other pre-rendered static data...\n-----\n` );
 		await this.unlinkAllStaticContent();
 		await this.createStaticIndexPage();
 		console.log( `\n-----\nDone! Launching Server...\n` );*/
@@ -46,7 +47,7 @@ let Static = target => class extends target {
 			await writeFile( indexTarget, bpContent );
 			console.log( `${ indexTarget } was updated successfully.` );
 		} catch( ex ) {
-
+			log( `Fehler:  ${ ex.message }`, 'red' );
 		}
 	}
 
