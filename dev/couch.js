@@ -174,7 +174,7 @@ let CouchConnection = target => class extends target {
 					state:	{ '$eq': 'approved' }
 				},
 				fields:		[ 'payerFirstName', 'payerLastName', 'amount', 'message', 'time' ],
-				limit:		100
+				limit:		500
 			});
 
 			return data;
